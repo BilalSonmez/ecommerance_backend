@@ -43,10 +43,11 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/check', async (req, res) => {
-    if (!checkAuth(req)) {
+    let auth = checkAuth(req);
+    if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
-    return res.send(checkAuth);
+    return res.send(auth);
 });
 
 router.post('/register', async (req, res) => {
