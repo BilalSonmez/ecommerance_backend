@@ -64,22 +64,27 @@ router.post('/update/:id', async (req, res) => {
         }
     } while (!contentLinkPass);
 
-    let product = Product.findByIdAndUpdate({_id: req.params.id}, req.body, function(err, doc) {
-        if (err) return res.send(500, {status: false, error: err});
-        return res.send({status: true});
-    });
-    //await product.update();
-    //return res.send(loDash.pick(product, ['_id', 'title', 'contentLink']));
+    const product = Product.findByIdAndUpdate(
+        { _id: req.params.id },
+        req.body,
+        (err) => {
+            if (err) return res.send(500, { status: false, error: err });
+            return res.send({ status: true });
+        },
+    );
+    // await product.update();
+    return res.send(loDash.pick(product, ['_id', 'title', 'contentLink']));
 });
 
 router.post('/delete/:id', async (req, res) => {
     if (!checkAuth(req, true)) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
-    let product = Product.findByIdAndRemove({_id: req.params.id}, function(err, doc) {
-        if (err) return res.send(500, {status: false, error: err});
-        return res.send({status: true});
+    Product.findByIdAndRemove({ _id: req.params.id }, (err) => {
+        if (err) return res.send(500, { status: false, error: err });
+        return res.send({ status: true });
     });
+    return res.send({ status: false });
 });
 
 module.exports = router;

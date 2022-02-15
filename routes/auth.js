@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/check', async (req, res) => {
-    let auth = checkAuth(req);
+    const auth = checkAuth(req);
     if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }

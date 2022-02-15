@@ -6,16 +6,17 @@ const { checkAuth } = require('../models/auth');
 const router = express.Router();
 
 router.get('/list', async (req, res) => {
-    let auth = checkAuth(req);
+    const auth = checkAuth(req);
     if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
-    const collection = await Collection.find({user_id: auth._id});
-    res.send(collection);
+    const collection = await Collection.find({ user_id: auth._id });
+    return res.send(collection);
 });
 
 router.post('/add', async (req, res) => {
-    if (!checkAuth(req, true)) {
+    const auth = checkAuth(req);
+    if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
     const { error } = validateCollectionAdd(req.body);
@@ -38,6 +39,7 @@ router.post('/add', async (req, res) => {
     const collection = new Collection({
         title: req.body.title,
         contentLink: contentLinkStr,
+        ownerId: auth._id,
         products: req.body.products,
     });
     await collection.save();
@@ -45,7 +47,8 @@ router.post('/add', async (req, res) => {
 });
 
 router.post('/update/:id', async (req, res) => {
-    if (!checkAuth(req, true)) {
+    const auth = checkAuth(req);
+    if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
     const { error } = validateCollectionUpdate(req.body);
@@ -65,22 +68,31 @@ router.post('/update/:id', async (req, res) => {
         }
     } while (!contentLinkPass);
 
-    let collection = Collection.findByIdAndUpdate({_id: req.params.id}, req.body, function(err, doc) {
-        if (err) return res.send(500, {status: false, error: err});
-        return res.send({status: true});
-    });
-    //await product.update();
-    //return res.send(loDash.pick(product, ['_id', 'title', 'contentLink']));
+    const collection = Collection.findByIdAndUpdate(
+        { _id: req.params.id, ownerId: auth._id },
+        req.body,
+        (err) => {
+            if (err) return res.send(500, { status: false, error: err });
+            return res.send({ status: true });
+        },
+    );
+    // await product.update();
+    return res.send(loDash.pick(collection, ['_id', 'title', 'contentLink']));
 });
 
 router.post('/delete/:id', async (req, res) => {
-    if (!checkAuth(req, true)) {
+    const auth = checkAuth(req);
+    if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
-    let collection = Collection.findByIdAndRemove({_id: req.params.id}, function(err, doc) {
-        if (err) return res.send(500, {status: false, error: err});
-        return res.send({status: true});
-    });
+    Collection.findByIdAndRemove(
+        { _id: req.params.id, ownerId: auth._id },
+        (err) => {
+            if (err) return res.send(500, { status: false, error: err });
+            return res.send({ status: true });
+        },
+    );
+    return res.send({ status: false });
 });
 
 module.exports = router;
