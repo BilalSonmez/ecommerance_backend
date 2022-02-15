@@ -5,7 +5,7 @@ const { checkAuth } = require('../models/auth');
 
 const router = express.Router();
 
-router.get('/:id', async (req, res) => {
+router.get('/get/:id', async (req, res) => {
     const products = await Product.findOne({contentLink: req.params.id});
     if (products) {
         res.send(products);
