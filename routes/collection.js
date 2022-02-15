@@ -5,6 +5,19 @@ const { checkAuth } = require('../models/auth');
 
 const router = express.Router();
 
+router.get('/get/:id', async (req, res) => {
+    const auth = checkAuth(req);
+    if (!auth) {
+        return res.status(401).send({ status: false, Message: 'Invalid Token' });
+    }
+    const collection = await Collection.findOne({contentLink: req.params.id, user_id: auth._id});
+    if (collection) {
+        res.send(collection);
+    } else {
+        res.status(404).send({status: false, message: "Not Found"});
+    }
+});
+
 router.get('/list', async (req, res) => {
     const auth = checkAuth(req);
     if (!auth) {
