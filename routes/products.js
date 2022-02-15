@@ -5,6 +5,14 @@ const { checkAuth } = require('../models/auth');
 
 const router = express.Router();
 
+router.get('/:id', async (req, res) => {
+    const products = await Product.findOne({_id: req.params.id});
+    if (products) {
+        res.send(products);
+    }
+    res.status(404).send({status: false, message: "Not Found"});
+});
+
 router.get('/list', async (req, res) => {
     const products = await Product.find({});
     res.send(products);
