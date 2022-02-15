@@ -77,7 +77,7 @@ router.post('/update/:id', async (req, res) => {
         },
     );
     // await product.update();
-    return res.send(loDash.pick(collection, ['_id', 'title', 'contentLink']));
+    return null;
 });
 
 router.post('/delete/:id', async (req, res) => {
@@ -92,7 +92,7 @@ router.post('/delete/:id', async (req, res) => {
             return res.send({ status: true });
         },
     );
-    return res.send({ status: false });
+    return null;
 });
 
 module.exports = router;

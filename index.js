@@ -5,6 +5,7 @@ const express = require('express');
 const { dbUserName, dbPassword } = require('./config/db');
 const auth = require('./routes/auth');
 const products = require('./routes/products');
+const collection = require('./routes/collection');
 
 const app = express();
 
@@ -15,6 +16,7 @@ mongoose.connect(`mongodb+srv://${dbUserName}:${dbPassword}@cluster0.vfgfs.mongo
 app.use(express.json());
 app.use('/api/auth', auth);
 app.use('/api/product', products);
+app.use('/api/collection', collection);
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`Listening Port: ${port}`));

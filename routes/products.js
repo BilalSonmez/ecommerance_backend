@@ -73,7 +73,7 @@ router.post('/update/:id', async (req, res) => {
         },
     );
     // await product.update();
-    return res.send(loDash.pick(product, ['_id', 'title', 'contentLink']));
+    return null;
 });
 
 router.post('/delete/:id', async (req, res) => {
