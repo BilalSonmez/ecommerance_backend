@@ -9,8 +9,9 @@ router.get('/get/:id', async (req, res) => {
     const products = await Product.findOne({contentLink: req.params.id});
     if (products) {
         res.send(products);
+    } else {
+        res.status(404).send({status: false, message: "Not Found"});
     }
-    res.status(404).send({status: false, message: "Not Found"});
 });
 
 router.get('/list', async (req, res) => {
