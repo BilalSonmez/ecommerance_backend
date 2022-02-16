@@ -5,6 +5,7 @@ const { checkAuth } = require('../models/auth');
 
 const router = express.Router();
 
+// Koleksiyon Detay Sayfası için koleksiyon linki ile tek bir koleksiyon çektim
 router.get('/get/:id', async (req, res) => {
     const auth = checkAuth(req);
     if (!auth) {
@@ -18,6 +19,7 @@ router.get('/get/:id', async (req, res) => {
     }
 });
 
+// Koleksiyon Sayfası için kullanıcıya ait koleksiyonları çektim
 router.get('/list', async (req, res) => {
     const auth = checkAuth(req);
     if (!auth) {
@@ -27,6 +29,7 @@ router.get('/list', async (req, res) => {
     return res.send(collection);
 });
 
+// Kullanıcı için yeni koleksiyon oluşturdum.
 router.post('/add', async (req, res) => {
     const auth = checkAuth(req);
     if (!auth) {
@@ -59,6 +62,7 @@ router.post('/add', async (req, res) => {
     return res.send(loDash.pick(collection, ['_id', 'title', 'contentLink']));
 });
 
+// Kullanıcı için yeni koleksiyon düzenledim.
 router.post('/update/:id', async (req, res) => {
     const auth = checkAuth(req);
     if (!auth) {
@@ -93,6 +97,7 @@ router.post('/update/:id', async (req, res) => {
     return null;
 });
 
+// Kullanıcı için yeni koleksiyon sildirdim.
 router.post('/delete/:id', async (req, res) => {
     const auth = checkAuth(req);
     if (!auth) {

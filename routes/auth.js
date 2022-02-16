@@ -9,6 +9,7 @@ const { checkAuth } = require('../models/auth');
 
 const router = express.Router();
 
+// Kullanıcı giriş bilgilerini doğruladım
 function validateAuth(user) {
     const schema = Joi.object({
         email: Joi.string().min(5).max(255).required()
@@ -18,6 +19,7 @@ function validateAuth(user) {
     return schema.validate(user);
 }
 
+// API için eposta ve şifre ile Bearer Token Oluşturma.
 router.post('/', async (req, res) => {
     const { error } = validateAuth(req.body);
     if (error) {
@@ -42,6 +44,7 @@ router.post('/', async (req, res) => {
     });
 });
 
+// Bearer Token kontrolü
 router.get('/check', async (req, res) => {
     const auth = checkAuth(req);
     if (!auth) {
@@ -50,6 +53,7 @@ router.get('/check', async (req, res) => {
     return res.send(auth);
 });
 
+// Kullanıcı kayıt sistemi.
 router.post('/register', async (req, res) => {
     const { error } = validateUser(req.body);
     if (error) {

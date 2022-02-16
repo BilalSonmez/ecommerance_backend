@@ -5,6 +5,7 @@ const { checkAuth } = require('../models/auth');
 
 const router = express.Router();
 
+// Ürün Detay Sayfası için ürün linki ile tek bir ürün çektim
 router.get('/get/:id', async (req, res) => {
     const products = await Product.findOne({contentLink: req.params.id});
     if (products) {
@@ -14,11 +15,13 @@ router.get('/get/:id', async (req, res) => {
     }
 });
 
+// Ürünler Sayfası için bütün ürünleri çektim
 router.get('/list', async (req, res) => {
     const products = await Product.find({});
     res.send(products);
 });
 
+// Sadece Admin kullanıcılar tarafından ürün eklettirdim. bkz: config/db.js
 router.post('/add', async (req, res) => {
     if (!checkAuth(req, true)) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
@@ -52,6 +55,7 @@ router.post('/add', async (req, res) => {
     return res.send(loDash.pick(product, ['_id', 'title', 'contentLink']));
 });
 
+// Sadece Admin kullanıcılar tarafından ürün düzenlendi. bkz: config/db.js
 router.post('/update/:id', async (req, res) => {
     if (!checkAuth(req, true)) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
@@ -85,6 +89,7 @@ router.post('/update/:id', async (req, res) => {
     return null;
 });
 
+// Sadece Admin kullanıcılar tarafından ürün sildirdim. bkz: config/db.js
 router.post('/delete/:id', async (req, res) => {
     if (!checkAuth(req, true)) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });

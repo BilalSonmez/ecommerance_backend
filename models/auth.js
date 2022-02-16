@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const { apiPrivateKey } = require('../config/api');
 const { perfectUser } = require('../config/db');
 
+// Kullanıcının token süresi ve _idsini alacağımız yer
 function checkAuth(req, power = false) {
     try {
         const token = req.headers.authorization.split(' ')[1];

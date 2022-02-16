@@ -2,6 +2,7 @@ const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 const mongoose = require('mongoose');
 
+//Mongo DB için Collection yapısını kurguladım
 const Collection = mongoose.model('Collection', new mongoose.Schema({
     title: {
         type: String,
@@ -25,6 +26,7 @@ const Collection = mongoose.model('Collection', new mongoose.Schema({
     },
 }));
 
+// Collection Eklerken gerekli alanları ekledim
 function validateCollectionAdd(collection) {
     const schema = Joi.object({
         title: Joi.string().min(2).max(500).required(),
@@ -35,6 +37,7 @@ function validateCollectionAdd(collection) {
     return schema.validate(collection);
 }
 
+// Collection Güncellerken gerekli alanları ekledim
 function validateCollectionUpdate(collection) {
     const schema = Joi.object({
         title: Joi.string().min(2).max(500),

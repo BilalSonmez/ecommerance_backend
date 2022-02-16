@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
+//Mongo DB için User yapısını kurguladım
 const User = mongoose.model('User', new mongoose.Schema({
     firstName: {
         type: String,
@@ -35,6 +36,7 @@ const User = mongoose.model('User', new mongoose.Schema({
     },
 }));
 
+// Kullanıcının kayıt esnasında gerekli alanları.
 function validateUser(user) {
     const schema = Joi.object({
         firstName: Joi.string().min(2).max(50).required(),
