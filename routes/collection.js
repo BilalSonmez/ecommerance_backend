@@ -15,10 +15,11 @@ router.get('/get/:slug', async (req, res) => {
     const collection = await Collection.findOne({contentLink: req.params.slug, user_id: auth._id});
     if (collection) {
         var products = [];
-        array.forEach(element => {
+        collection.forEach(element => {
             var product_element = Product.findOne({_id: element});
             products.push(product_element);
         });
+        collection.products = products;
         res.send(collection);
     } else {
         res.status(404).send({status: false, message: "Not Found"});
