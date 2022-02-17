@@ -19,6 +19,13 @@ function validateAuth(user) {
     return schema.validate(user);
 }
 
+function validateVerify(data) {
+    const schema = Joi.object({
+        verify: Joi.boolean().required(),
+    });
+    return schema.validate(data);
+}
+
 // API için eposta ve şifre ile Bearer Token Oluşturma.
 router.post('/', async (req, res) => {
     const { error } = validateAuth(req.body);
@@ -73,6 +80,27 @@ router.post('/register', async (req, res) => {
     user.password = await bcrypt.hash(user.password, salt);
     await user.save();
     return res.send({ status: true });
+});
+
+//Kullanıcı Doğrulama
+router.post('/verify/:id', async (req, res) => {
+    if (!checkAuth(req, true)) {
+        return res.status(401).send({ status: false, Message: 'Invalid Token' });
+    }
+    const { error } = validateVerify(req.body);
+    if (error) {
+        return res.status(400).send({status: false, message: error.details[0].message});
+    }
+    const user = User.findByIdAndUpdate(
+        { _id: req.params.id },
+        req.body,
+        (err) => {
+            if (err) return res.send(500, { status: false, error: err });
+            return res.send({ status: true });
+        },
+    );
+    // await product.update();
+    return null;
 });
 
 module.exports = router;

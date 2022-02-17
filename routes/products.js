@@ -28,7 +28,7 @@ router.post('/add', async (req, res) => {
     }
     const { error } = validateProductAdd(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
+        return res.status(400).send({status: false, message: error.details[0].message});
     }
     let contentLinkPass = false;
     let contentLinkCount = 0;

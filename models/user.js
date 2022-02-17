@@ -34,6 +34,10 @@ const User = mongoose.model('User', new mongoose.Schema({
         minlength: 5,
         maxlength: 1024,
     },
+    verify: {
+        type: Boolean,
+        default: false
+    }
 }));
 
 // Kullanıcının kayıt esnasında gerekli alanları.
