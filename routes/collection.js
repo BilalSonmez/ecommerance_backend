@@ -2,17 +2,23 @@ const loDash = require('lodash');
 const express = require('express');
 const { Collection, validateCollectionAdd, validateCollectionUpdate } = require('../models/collection');
 const { checkAuth } = require('../models/auth');
+const { Product } = require('../models/product');
 
 const router = express.Router();
 
 // Koleksiyon Detay Sayfası için koleksiyon linki ile tek bir koleksiyon çektim
-router.get('/get/:id', async (req, res) => {
+router.get('/get/:slug', async (req, res) => {
     const auth = checkAuth(req);
     if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
-    const collection = await Collection.findOne({contentLink: req.params.id, user_id: auth._id});
+    const collection = await Collection.findOne({contentLink: req.params.slug, user_id: auth._id});
     if (collection) {
+        var products = [];
+        array.forEach(element => {
+            var product_element = await Product.findOne({_id: element});
+            products.push(product_element);
+        });
         res.send(collection);
     } else {
         res.status(404).send({status: false, message: "Not Found"});
