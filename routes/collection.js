@@ -37,7 +37,7 @@ router.post('/add', async (req, res) => {
     }
     const { error } = validateCollectionAdd(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
+        return res.status(400).send({status: false, message: error.details[0].message});
     }
     let contentLinkPass = false;
     let contentLinkCount = 0;
@@ -59,7 +59,7 @@ router.post('/add', async (req, res) => {
         products: req.body.products,
     });
     await collection.save();
-    return res.send(loDash.pick(collection, ['_id', 'title', 'contentLink']));
+    return res.send({status: true});
 });
 
 // Kullanıcı için yeni koleksiyon düzenledim.
