@@ -40,7 +40,11 @@ router.post('/', async (req, res) => {
         expiresIn: '2h',
     });
     return res.send({
-        status: true, message: 'success', token, expires: Math.floor(Date.now() / 1000) + 7200,
+        status: true,
+        message: 'success',
+        token: token, 
+        expires: Math.floor(Date.now() / 1000) + 7200,
+        userData: user
     });
 });
 
