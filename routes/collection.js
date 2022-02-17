@@ -15,7 +15,7 @@ router.get('/get/:slug', async (req, res) => {
     const collection = await Collection.findOne({contentLink: req.params.slug, user_id: auth._id});
     if (collection) {
         var products = [];
-        array.forEach(element => {
+        await array.forEach(element => {
             var product_element = await Product.findOne({_id: element});
             products.push(product_element);
         });
