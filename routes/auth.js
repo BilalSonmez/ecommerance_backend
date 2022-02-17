@@ -69,7 +69,6 @@ router.post('/register', async (req, res) => {
         return res.status(400).send({ status: false, message: 'User Already Exists!' });
     }
     user = new User(req.body);
-    user = new User(loDash.pick(req.body, ['name', 'email', 'password']));
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     await user.save();
