@@ -12,10 +12,10 @@ router.post('/add/:id', async (req, res) => {
     if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
-    const collection = await Collection.findOne({ _id: req.params.id, ownerId: auth._id });
+    var collection = await Collection.findOne({ _id: req.params.id, ownerId: auth._id });
     if (collection) {
         collection.products.push(req.body.productId);
-        Collection.findOneAndUpdate({ _id: req.params.id, ownerId: auth._id }, collection);
+        collection = await Collection.findOneAndUpdate({ _id: req.params.id, ownerId: auth._id }, collection);
         return res.send({ status: true });
     }
     return res.status(404).send({ status: false, message: 'Not Found' });
@@ -27,13 +27,13 @@ router.post('/remove/:id', async (req, res) => {
     if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
-    const collection = await Collection.findOne({ _id: req.params.id, ownerId: auth._id });
+    var collection = await Collection.findOne({ _id: req.params.id, ownerId: auth._id });
     if (collection) {
         const filtered = collection.products.filter(
             (value) => value !== req.body.productId,
         );
         collection.products = filtered;
-        Collection.findOneAndUpdate({ _id: req.params.id, ownerId: auth._id }, collection);
+        collection = await Collection.findOneAndUpdate({ _id: req.params.id, ownerId: auth._id }, collection);
         return res.send({ status: true });
     }
     return res.status(404).send({ status: false, message: 'Not Found' });
@@ -150,14 +150,14 @@ router.post('/delete/:id', async (req, res) => {
     if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
-    Collection.findOneAndDelete(
+    var collection = await Collection.findOneAndDelete(
         { _id: req.params.id, ownerId: auth._id },
         (err) => {
             if (err) return res.send(500, { status: false, error: err });
             return res.send({ status: true });
         },
     );
-    return null;
+    return res.send(collection);
 });
 
 module.exports = router;

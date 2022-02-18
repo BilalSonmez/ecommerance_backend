@@ -1,6 +1,6 @@
 // Mongo DB Username & Password Heroku Variables
-const username = process.env.DB_USERNAME;
-const password = process.env.DB_PASSWORD;
+const username = "bilal"//process.env.DB_USERNAME;
+const password = "zoEGLyzp6oRBQp6Q"//process.env.DB_PASSWORD;
 
 // Product Add, Edit & Delete Admin User
 const perfectUser = [
