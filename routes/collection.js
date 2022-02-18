@@ -12,10 +12,10 @@ router.post('/add/:id', async (req, res) => {
     if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
-    const collection = await Collection.findOne({ _id: req.params.id, user_id: auth._id });
+    const collection = await Collection.findOne({ _id: req.params.id, ownerId: auth._id });
     if (collection) {
         collection.products.push(req.body.productId);
-        Collection.findByIdAndUpdate({ _id: req.params.id, user_id: auth._id }, collection);
+        Collection.findByIdAndUpdate({ _id: req.params.id, ownerId: auth._id }, collection);
         return res.send({ status: true });
     }
     return res.status(404).send({ status: false, message: 'Not Found' });
@@ -27,13 +27,13 @@ router.post('/remove/:id', async (req, res) => {
     if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
-    const collection = await Collection.findOne({ _id: req.params.id, user_id: auth._id });
+    const collection = await Collection.findOne({ _id: req.params.id, ownerId: auth._id });
     if (collection) {
         const filtered = collection.products.filter(
             (value) => value !== req.body.productId,
         );
         collection.products = filtered;
-        Collection.findByIdAndUpdate({ _id: req.params.id, user_id: auth._id }, collection);
+        Collection.findByIdAndUpdate({ _id: req.params.id, ownerId: auth._id }, collection);
         return res.send({ status: true });
     }
     return res.status(404).send({ status: false, message: 'Not Found' });
