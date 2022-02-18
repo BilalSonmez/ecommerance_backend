@@ -15,7 +15,7 @@ router.post('/add/:id', async (req, res) => {
     const collection = await Collection.findOne({ _id: req.params.id, user_id: auth._id });
     if (collection) {
         collection.products.push(req.body.productId);
-        await Collection.findOneAndUpdate({ _id: req.params.id, user_id: auth._id }, collection);
+        Collection.findByIdAndUpdate({ _id: req.params.id, user_id: auth._id }, collection);
         return res.send({ status: true });
     }
     return res.status(404).send({ status: false, message: 'Not Found' });
@@ -33,7 +33,7 @@ router.post('/remove/:id', async (req, res) => {
             (value) => value !== req.body.productId,
         );
         collection.products = filtered;
-        await Collection.findOneAndUpdate({ _id: req.params.id, user_id: auth._id }, collection);
+        Collection.findByIdAndUpdate({ _id: req.params.id, user_id: auth._id }, collection);
         return res.send({ status: true });
     }
     return res.status(404).send({ status: false, message: 'Not Found' });
@@ -133,7 +133,7 @@ router.post('/update/:id', async (req, res) => {
         }
     } while (!contentLinkPass);
 
-    await Collection.findOneAndUpdate(
+    Collection.findByIdAndUpdate(
         { _id: req.params.id, ownerId: auth._id },
         req.body,
         (err) => {
