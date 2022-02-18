@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
-//Mongo DB için User yapısını kurguladım
+// Mongo DB için User yapısını kurguladım
 const User = mongoose.model('User', new mongoose.Schema({
     firstName: {
         type: String,
@@ -36,8 +36,8 @@ const User = mongoose.model('User', new mongoose.Schema({
     },
     verify: {
         type: Boolean,
-        default: false
-    }
+        default: false,
+    },
 }));
 
 // Kullanıcının kayıt esnasında gerekli alanları.

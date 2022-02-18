@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
-const loDash = require('lodash');
 const express = require('express');
 const { User, validateUser } = require('../models/user');
 const { apiPrivateKey } = require('../config/api');
@@ -49,9 +48,9 @@ router.post('/', async (req, res) => {
     return res.send({
         status: true,
         message: 'success',
-        token: token, 
+        token,
         expires: Math.floor(Date.now() / 1000) + 7200,
-        userData: user
+        userData: user,
     });
 });
 
@@ -68,7 +67,7 @@ router.get('/check', async (req, res) => {
 router.post('/register', async (req, res) => {
     const { error } = validateUser(req.body);
     if (error) {
-        return res.status(400).send({status: false, message: error.details[0].message});
+        return res.status(400).send({ status: false, message: error.details[0].message });
     }
 
     let user = await User.findOne({ email: req.body.email });
@@ -82,16 +81,16 @@ router.post('/register', async (req, res) => {
     return res.send({ status: true });
 });
 
-//Kullanıcı Doğrulama
+// Kullanıcı Doğrulama
 router.post('/verify/:id', async (req, res) => {
     if (!checkAuth(req, true)) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
     const { error } = validateVerify(req.body);
     if (error) {
-        return res.status(400).send({status: false, message: error.details[0].message});
+        return res.status(400).send({ status: false, message: error.details[0].message });
     }
-    const user = User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
         { _id: req.params.id },
         req.body,
         (err) => {

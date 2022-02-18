@@ -2,7 +2,7 @@ const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 const mongoose = require('mongoose');
 
-//Mongo DB için Collection yapısını kurguladım
+// Mongo DB için Collection yapısını kurguladım
 const Collection = mongoose.model('Collection', new mongoose.Schema({
     title: {
         type: String,

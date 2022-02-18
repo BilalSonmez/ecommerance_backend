@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
-//Mongo DB için Product yapısını kurguladım
+// Mongo DB için Product yapısını kurguladım
 const Product = mongoose.model('Product', new mongoose.Schema({
     title: {
         type: String,

@@ -1,4 +1,4 @@
-//Mongo DB Username & Password Heroku Variables
+// Mongo DB Username & Password Heroku Variables
 const username = process.env.DB_USERNAME;
 const password = process.env.DB_PASSWORD;
 

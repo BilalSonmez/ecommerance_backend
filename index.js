@@ -16,7 +16,7 @@ mongoose.connect(`mongodb+srv://${dbUserName}:${dbPassword}@cluster0.vfgfs.mongo
 // Gelen datayı json olarak tanımladım
 app.use(express.json());
 
-//Rotaları oluşturdum
+// Rotaları oluşturdum
 app.use('/api/auth', auth);
 app.use('/api/product', products);
 app.use('/api/collection', collection);

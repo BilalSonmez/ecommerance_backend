@@ -7,11 +7,11 @@ const router = express.Router();
 
 // Ürün Detay Sayfası için ürün linki ile tek bir ürün çektim
 router.get('/get/:id', async (req, res) => {
-    const products = await Product.findOne({contentLink: req.params.id});
+    const products = await Product.findOne({ contentLink: req.params.id });
     if (products) {
         res.send(products);
     } else {
-        res.status(404).send({status: false, message: "Not Found"});
+        res.status(404).send({ status: false, message: 'Not Found' });
     }
 });
 
@@ -28,7 +28,7 @@ router.post('/add', async (req, res) => {
     }
     const { error } = validateProductAdd(req.body);
     if (error) {
-        return res.status(400).send({status: false, message: error.details[0].message});
+        return res.status(400).send({ status: false, message: error.details[0].message });
     }
     let contentLinkPass = false;
     let contentLinkCount = 0;
@@ -77,7 +77,7 @@ router.post('/update/:id', async (req, res) => {
         }
     } while (!contentLinkPass);
 
-    const product = Product.findByIdAndUpdate(
+    await Product.findByIdAndUpdate(
         { _id: req.params.id },
         req.body,
         (err) => {
