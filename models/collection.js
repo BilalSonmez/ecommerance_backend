@@ -42,7 +42,7 @@ function validateCollectionUpdate(collection) {
     const schema = Joi.object({
         title: Joi.string().min(2).max(500),
         contentLink: Joi.string().min(3).max(50),
-        products: Joi.array().required(),
+        products: Joi.array(),
     });
     return schema.validate(collection);
 }

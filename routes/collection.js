@@ -1,10 +1,47 @@
 const loDash = require('lodash');
 const express = require('express');
+const mongoose = require('mongoose');
 const { Collection, validateCollectionAdd, validateCollectionUpdate } = require('../models/collection');
 const { checkAuth } = require('../models/auth');
 const { Product } = require('../models/product');
 
 const router = express.Router();
+
+
+// Tekil Koleksiyon ürün ekleme
+router.post('/add/:id', async (req, res) => {
+    const auth = checkAuth(req);
+    if (!auth) {
+        return res.status(401).send({ status: false, Message: 'Invalid Token' });
+    }
+    const collection = await Collection.findOne({_id: req.params.id, user_id: auth._id});
+    if (collection) {
+        collection.products.push(req.body.productId);
+        await Collection.findByIdAndUpdate({_id: req.params.id, user_id: auth._id}, collection);
+        res.send({status: true});
+    } else {
+        res.status(404).send({status: false, message: "Not Found"});
+    }
+});
+
+// Tekil Koleksiyon ürün silme
+router.post('/remove/:id', async (req, res) => {
+    const auth = checkAuth(req);
+    if (!auth) {
+        return res.status(401).send({ status: false, Message: 'Invalid Token' });
+    }
+    const collection = await Collection.findOne({_id: req.params.id, user_id: auth._id});
+    if (collection) {
+        var filtered = collection.products.filter(function(value, index, arr){ 
+            return value != req.body.productId;
+        });
+        collection.products = filtered;
+        await Collection.findByIdAndUpdate({_id: req.params.id, user_id: auth._id}, collection);
+        res.send({status: true});
+    } else {
+        res.status(404).send({status: false, message: "Not Found"});
+    }
+});
 
 // Koleksiyon Detay Sayfası için koleksiyon linki ile tek bir koleksiyon çektim
 router.get('/get/:slug', async (req, res) => {
@@ -12,14 +49,15 @@ router.get('/get/:slug', async (req, res) => {
     if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
-    const collection = await Collection.findOne({contentLink: req.params.slug, user_id: auth._id});
+    const collection = await Collection.findOne({contentLink: req.params.slug, ownerId: auth._id});
     if (collection) {
         var products = [];
-        let collection_products = collection.products;
-        collection_products.forEach(element => {
-            var product_element = Product.findOne({_id: element});
-            products.push(product_element);
-        });
+        for (const key in collection.products) {
+            var product_element = await Product.findOne({ _id: mongoose.Types.ObjectId(collection.products[key]) });
+            if (product_element) {
+                products.push(product_element);
+            }
+        }
         collection.products = products;
         res.send(collection);
     } else {
@@ -33,7 +71,7 @@ router.get('/list', async (req, res) => {
     if (!auth) {
         return res.status(401).send({ status: false, Message: 'Invalid Token' });
     }
-    const collection = await Collection.find({ user_id: auth._id });
+    const collection = await Collection.find({ ownerId: auth._id });
     return res.send(collection);
 });
 
